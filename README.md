@@ -89,10 +89,5 @@ export GROQ_API_KEY="your_groq_api_key"
 
 ---
 
-## 📜 License
-
-MIT License
-
----
 
 Made with 💻 by [Pratyush](https://github.com/Pratyush2005)
