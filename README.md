@@ -1,15 +1,17 @@
 # 🧠 Synapse
 
-**Synapse** is a minimalistic, AI-powered terminal tool for macOS that lets you monitor processes and understand what they do — instantly. It combines Unix commands like `ps` with the power of LLMs (via Groq) to provide real-time, plain-English explanations.
+**Synapse** is a minimalistic, AI-powered terminal tool for macOS that lets you monitor processes, inspect network connections, and get AI-powered explanations or troubleshooting suggestions. It combines Unix tools (`ps`, `lsof`) with Groq's LLM (`gemma2-9b-it`) to give real-time insights and advice.
 
 ---
 
 ## ⚙️ Features
 
 - 📊 Display top N running processes using `ps`
-- 🤖 Use Groq API with the `gemma2-9b-it` model to explain what a process is doing
+- 🤖 Use Groq API to explain what a process does (PID-based)
+- 🌐 View active network connections via `lsof`
+- 🔧 Get AI-powered troubleshooting suggestions for system/network issues
 - ⚡ Pure C performance — fast and lightweight
-- 🔐 No dependencies except `curl`, `ps`, and `cJSON`
+- 🔐 Minimal dependencies: `curl`, `ps`, `lsof`, `cJSON`
 
 ---
 
@@ -18,7 +20,7 @@
 - macOS (tested on Apple Silicon)
 - [Groq API Key](https://console.groq.com/)
 - GCC or Clang compiler
-- Internet connection (for AI explanation)
+- Internet connection (for AI features)
 
 ---
 
@@ -35,24 +37,35 @@ gcc main.c cJSON.c -o synapse
 ## 🚀 Usage
 
 ```bash
-./synapse --top 15           # Show top 15 processes
-./synapse --explain <PID>    # AI explanation for specific PID
-./synapse --help             # Show CLI usage
+./synapse --top 15              # Show top 15 processes
+./synapse --explain <PID>       # AI explanation for a specific PID
+./synapse --net                 # Show active network connections
+./synapse --ai-help "wifi slow" # Get AI suggestions to fix your issue
+./synapse --help                # Show help
 ```
 
 ---
 
-## 🧠 Example
+## 🧠 Examples
 
 ```bash
 $ ./synapse --explain 1208
 
-🧠 Getting info for PID 1208...
+🧠 Process Explanation:
+This is the main Firefox browser process, responsible for rendering tabs and UI.
 
-Process info: /Applications/Firefox.app/Contents/MacOS/firefox
+$ ./synapse --net
 
-🧠 Explanation:
-This is the Firefox web browser process, used for web browsing and developer tools.
+🌐 Active Network Connections:
+PID      CONNECTION          PROCESS   
+1234     127.0.0.1:3000      node      
+5678     0.0.0.0:22          sshd      
+
+$ ./synapse --ai-help "wifi disconnects frequently"
+
+🔧 Recommended Actions:
+Try restarting your DNS resolver:
+sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
 ```
 
 ---
@@ -69,10 +82,10 @@ export GROQ_API_KEY="your_groq_api_key"
 
 ## 🛠️ Developer Notes
 
-- `main.c` — contains CLI handling, process extraction, AI integration
-- Uses `curl` to call the Groq API
-- Uses `cJSON` for parsing streaming JSON responses
-- Minimal memory-safe helper utilities for escaping strings and cleaning output
+- `main.c` — CLI logic, Groq API calls, process & network handling
+- `handle_streamed_response()` handles real-time output from streaming API
+- Uses `cJSON` for parsing responses
+- Uses `curl` to call Groq’s `gemma2-9b-it` LLM
 
 ---
 
@@ -82,4 +95,4 @@ MIT License
 
 ---
 
-Built with ❤️ by [Pratyush](https://github.com/Pratyush2005)
+Made with 💻 by [Pratyush](https://github.com/Pratyush2005)
